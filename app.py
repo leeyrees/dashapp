@@ -12,3 +12,10 @@ app = dash.Dash(__name__, title="Dash App")
 import numpy as np
 import pandas as pd
 import json
+
+
+df_url_1 = 'https://raw.githubusercontent.com/leeyrees/datasets/main/MyData.csv'
+df_1 = pd.read_csv(df_url_1).dropna()
+
+df_url_2 = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.csv'
+df_2 = pd.read_csv(df_url_2).dropna()
