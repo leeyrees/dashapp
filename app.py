@@ -18,7 +18,7 @@ from dash.dependencies import Input, Output
 
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/MyData.csv'
 df = pd.read_csv(df_url).dropna()
-df['BackProblems'] = df['BackProblems'].astype('category')
+
 
 PAGE_SIZE = 5
 
