@@ -52,7 +52,7 @@ app.layout = html.Div([
     dcc.RangeSlider(
         id='range-slider',
         min=0, max=6, step=1,
-        marks={0: '0', 6: '6'},
+        marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
         value=[0, 6]
     ),
 ])
