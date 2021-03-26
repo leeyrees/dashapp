@@ -18,11 +18,12 @@ from dash.dependencies import Input, Output
 
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/MyData.csv'
 df = pd.read_csv(df_url).dropna()
-
+df['BackProblems'] = df['BackProblems'].astype('category')
 
 PAGE_SIZE = 5
 
-app.layout = dash_table.DataTable(
+app.layout = html.Div([
+    dash_table.DataTable(
     id='table-sorting-filtering',
     columns=[
         {'name': i, 'id': i, 'deletable': True} for i in sorted(df.columns)
@@ -37,8 +38,16 @@ app.layout = dash_table.DataTable(
     sort_action='custom',
     sort_mode='multi',
     sort_by=[]
-)
-
+),
+    dcc.Graph(id="scatter-plot"),
+    html.P("Year"),
+    dcc.RangeSlider(
+        id='range-slider',
+        min=0, max=6, step=1,
+        marks={0: '0', 6: '6'},
+        value=[0, 6]
+    ),
+])
 
 operators = [['ge ', '>='],
              ['le ', '<='],
@@ -109,6 +118,17 @@ def update_table(page_current, page_size, sort_by, filter):
     size = page_size
     return dff.iloc[page * size: (page + 1) * size].to_dict('records')
 
+@app.callback(
+    Output("scatter-plot", "figure"), 
+    [Input("range-slider", "value")])
+def update_bar_chart(slider_range):
+    low, high = slider_range
+    mask = (df['Year'] > low) & (df['Year'] < high)
+    fig = px.scatter(
+        df[mask], x="BodyWeight", y="BackpackWeight", 
+        color="BackProblems", size='Ratio', 
+        hover_data=['Year'])
+    return fig
 
 if __name__ == '__main__':
     app.run_server(debug=True)
