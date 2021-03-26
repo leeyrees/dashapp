@@ -5,7 +5,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 import plotly.express as px
 import dash_bootstrap_components as dbc
-import dash_table
+import dash_table 
+import plotly.graph_objects as go
 
 
 app = dash.Dash(__name__, title="Dash App Wine Dataset")
@@ -19,8 +20,24 @@ from dash.dependencies import Input, Output
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.csv'
 df = pd.read_csv(df_url).dropna()
 
+markdown_hists = '''
+
+
+## Histograms of the data
+
+###### Select the variable to plot the histogram
+'''
 
 PAGE_SIZE = 5
+
+fig_names = ['citric acid', 'alcohol']
+fig_dropdown = html.Div([
+    dcc.Dropdown(
+        id='fig_dropdown',
+        options=[{'label': x, 'value': x} for x in fig_names],
+        value=None
+    )])
+fig_plot = html.Div(id='fig_plot')
 
 app.layout = html.Div([
     dash_table.DataTable(
@@ -59,6 +76,9 @@ app.layout = html.Div([
         marks={3: '3', 4: '4', 5: '5', 6: '6', 7:'7', 8:'8', 9: '9'},
         value=[3, 9]
     ),
+    dcc.Markdown(markdown_hists),
+    fig_dropdown,
+    fig_plot
 ])
 
 operators = [['ge ', '>='],
@@ -138,9 +158,26 @@ def update_bar_chart(slider_range):
     mask = (df['quality'] > low) & (df['quality'] < high)
     fig = px.scatter(
         df[mask], x="total sulfur dioxide", y="alcohol", 
-        color="type", size='pH', 
+        color="type", 
         hover_data=['quality'])
     return fig
+
+
+
+@app.callback(
+dash.dependencies.Output('fig_plot', 'children'),
+[dash.dependencies.Input('fig_dropdown', 'value')])
+def update_output(fig_name):
+    return name_to_figure(fig_name)
+
+def name_to_figure(fig_name):
+    figure = go.Figure()
+    if fig_name == 'citric acid':
+        figure.add_trace(go.Histogram(x=df['citric acid']))
+    elif fig_name == 'alcohol': 
+        figure.add_trace(go.Histogram(x=df['alcohol']))
+    return dcc.Graph(figure=figure)
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
