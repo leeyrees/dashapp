@@ -26,7 +26,15 @@ app.layout = html.Div([
     dash_table.DataTable(
     id='table-sorting-filtering',
     columns=[
-        {'name': i, 'id': i, 'deletable': True} for i in sorted(df.columns)
+        {'name': 'BackpackWeight', 'id': 'BackpackWeight', 'type': 'numeric'},
+        {'name': 'BodyWeight', 'id': 'BodyWeight', 'type': 'numeric'},
+        {'name': 'Ratio', 'id': 'Ratio', 'type': 'numeric'},
+        {'name': 'BackProblems', 'id': 'BackProblems', 'type': 'numeric'},
+        {'name': 'Major', 'id' :'Major', 'type': 'text'},
+        {'name': 'Year', 'id' :'Year', 'type': 'numeric'},
+        {'name': 'Sex', 'id' :'Sex', 'type': 'text'},
+        {'name': 'Status', 'id' :'Status', 'type': 'text'},
+        {'name': 'Units', 'id' :'Units', 'type': 'numeric'}
     ],
     page_current= 0,
     page_size= PAGE_SIZE,
