@@ -37,8 +37,7 @@ models = {'Regression': linear_model.LogisticRegression,
 
 
 PAGE_SIZE = 5
-def create_layout(app):
-    return  html.Div([
+app.layout = html.Div([
     dash_table.DataTable(
     id='table-sorting-filtering',
     columns=[

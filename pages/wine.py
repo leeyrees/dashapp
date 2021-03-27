@@ -35,7 +35,6 @@ markdown_hists = '''
 '''
 
 PAGE_SIZE = 5
-
 fig_names = ['citric acid', 'alcohol']
 fig_dropdown = html.Div([
     dcc.Dropdown(
@@ -45,10 +44,6 @@ fig_dropdown = html.Div([
     )])
 fig_plot = html.Div(id='fig_plot')
 
-<<<<<<< HEAD:pages/wine.py
-def create_layout(app):
-    return html.Div([
-=======
 np.random.seed(0)
 X = df.drop('type', axis = 1)
 
@@ -65,35 +60,105 @@ MODELS = {'Logistic': linear_model.LogisticRegression,
 
 
 app.layout = html.Div([
->>>>>>> a74bd5746ee3e40aaa995b0b9701f59b01dadda4:wine.py
-    dash_table.DataTable(
-    id='table-sorting-filtering',
-    columns=[
-        {'name': 'type', 'id': 'type', 'type': 'text'},
-        {'name': 'fixed acidity', 'id': 'fixed acidity', 'type': 'numeric'},
-        {'name': 'volatile acidity', 'id': 'volatile acidity', 'type': 'numeric'},
-        {'name': 'citric acid', 'id': 'citric acid', 'type': 'numeric'},
-        {'name': 'residual sugar', 'id' :'residual sugar', 'type': 'numeric'},
-        {'name': 'chlorides', 'id' :'chlorides', 'type': 'numeric'},
-        {'name': 'free sulfur dioxide', 'id' :'free sulfur dioxide', 'type': 'numeric'},
-        {'name': 'total sulfur dioxide', 'id' :'total sulfur dioxide', 'type': 'numeric'},
-        {'name': 'density', 'id' :'density', 'type': 'numeric'},
-        {'name': 'pH', 'id': 'pH', 'type': 'numeric'},
-        {'name': 'sulphates', 'id': 'sulphates', 'type': 'numeric'},
-        {'name': 'alcohol', 'id': 'alcohol', 'type': 'numeric'},
-        {'name': 'quality', 'id': 'quality', 'type': 'numeric'}
-    ],
-    page_current= 0,
-    page_size= PAGE_SIZE,
-    page_action='custom',
 
-    filter_action='custom',
-    filter_query='',
+        # Row 1
+                    html.Div([
+                            html.Div([
+                                    html.H5("WINE DATASET"),
+                                    html.Br([]),
+                                    html.P(
+                                        "\
+                                    In this page we are going to carry out an analysis of the wine dataset \
+                                    from the Shiny App of Marta Ilundain (github: ENLACE).",
+                                        
+                                        className="row",
+                                    ),
+                                ],
+                                className="product",
+                            )
+                        ], className="row",),
+        # Row 2
+                    html.Div([
+                            html.Div([
+                                    html.H6(
+                                        ["Data table"], className="subtitle padded"
+                                    ),
+                                    html.Br([]),
+                                    dash_table.DataTable(
+                                    id='table-sorting-filtering',
+                                     columns=[
+                                    {'name': 'type', 'id': 'type', 'type': 'text'},
+                                    {'name': 'fixed acidity', 'id': 'fixed acidity', 'type': 'numeric'},
+                                    {'name': 'volatile acidity', 'id': 'volatile acidity', 'type': 'numeric'},
+                                      {'name': 'citric acid', 'id': 'citric acid', 'type': 'numeric'},
+                                     {'name': 'residual sugar', 'id' :'residual sugar', 'type': 'numeric'},
+                                     {'name': 'chlorides', 'id' :'chlorides', 'type': 'numeric'},
+                                      {'name': 'free sulfur dioxide', 'id' :'free sulfur dioxide', 'type': 'numeric'},
+                                     {'name': 'total sulfur dioxide', 'id' :'total sulfur dioxide', 'type': 'numeric'},
+                                     {'name': 'density', 'id' :'density', 'type': 'numeric'},
+                                   {'name': 'pH', 'id': 'pH', 'type': 'numeric'},
+                                       {'name': 'sulphates', 'id': 'sulphates', 'type': 'numeric'},
+                                     {'name': 'alcohol', 'id': 'alcohol', 'type': 'numeric'},
+                                     {'name': 'quality', 'id': 'quality', 'type': 'numeric'}
+                                    ],
+                                        page_current= 0,
+                                        page_size= PAGE_SIZE,
+                                        page_action='custom',
 
-    sort_action='custom',
-    sort_mode='multi',
-    sort_by=[]
-),
+                                        filter_action='custom',
+                                        filter_query='',
+
+                                        sort_action='custom',
+                                        sort_mode='multi',
+                                        sort_by=[]
+                                    ),
+                                    
+                                ],
+                                
+                            )
+                        ],
+                        
+                    ),
+            # Row 3
+                    html.Div(
+                        [
+                            html.Div(
+                                [
+                                    html.P("x-axis:"),
+                                    dcc.Checklist(
+                                        id='x-axis', 
+                                        options=[{'value': x, 'label': x} 
+                                                for x in ['fixed acidity', 'citric acid', 'chlorides', 'density']],
+                                        value=['citric acid'], 
+                                        labelStyle={'display': 'inline-block'}
+                                    ),
+                                    html.P("y-axis:"),
+                                    dcc.RadioItems(
+                                        id='y-axis', 
+                                        options=[{'value': x, 'label': x} 
+                                                for x in ['fixed acidity', 'citric acid', 'density','pH','alcohol']],
+                                        value='citric acid', 
+                                        labelStyle={'display': 'inline-block'}
+                                    ),
+                                    dcc.Graph(id="box-plot"),
+                                    
+                                ]),
+                            html.Div([
+                                html.P("x-axis:"),
+                                    dcc.Checklist(
+                                        id='x-axishist', 
+                                        options=[{'value': x, 'label': x} 
+                                                for x in ['fixed acidity', 'citric acid', 'chlorides', 'density']],
+                                        value=['citric acid'], 
+                                        labelStyle={'display': 'inline-block'}
+                                    ),
+                                    dcc.Graph(id="hist-plot"),
+                                    
+                                            
+                                       
+                                ]),
+                        ]),
+    
     dcc.Graph(id="scatter-plot"),
     html.P("quality"),
     dcc.RangeSlider(
@@ -191,10 +256,26 @@ def update_table(page_current, page_size, sort_by, filter):
 def update_bar_chart(slider_range):
     low, high = slider_range
     mask = (df['quality'] > low) & (df['quality'] < high)
-    fig = px.scatter(
+    fig ={ px.scatter(
         df[mask], x="total sulfur dioxide", y="alcohol", 
         color="type", 
-        hover_data=['quality'])
+        hover_data=['quality']),
+        "layout": go.Layout(
+          autosize=True,
+           width=700,
+             height=200,
+            font={"family": "Raleway", "size": 10},
+               margin={
+                 "r": 30,
+                    "t": 30,
+                  "b": 30,
+                   "l": 30,
+                },
+                 showlegend=True,
+                 titlefont={
+                "family": "Raleway",
+                   "size": 10,
+                },},
     return fig
 
 
@@ -235,6 +316,37 @@ def train_and_display(name):
         type='line', line=dict(dash='dash'),
         x0=0, x1=1, y0=0, y1=1)
 
+    return fig
+
+@app.callback(
+    Output("box-plot", "figure"), 
+    [Input("x-axis", "value"), 
+     Input("y-axis", "value")])
+def generate_chart(x, y):
+    fig = {px.box(df, x=x, y=y),
+    "layout": go.Layout(
+                                                autosize=True,
+                                                width=700,
+                                                height=200,
+                                                font={"family": "Raleway", "size": 10},
+                                                margin={
+                                                    "r": 30,
+                                                    "t": 30,
+                                                    "b": 30,
+                                                    "l": 30,
+                                                },
+                                                showlegend=True,
+                                                titlefont={
+                                                    "family": "Raleway",
+                                                    "size": 10,
+                                                },},
+    return fig
+
+@app.callback(
+    Output("hist-plot", "figure"), 
+    [Input("x-axishist", "value")])
+def generate_chart(x):
+    fig = px.histogram(df, x=x)
     return fig
 
 
