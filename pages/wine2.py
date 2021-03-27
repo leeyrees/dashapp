@@ -6,15 +6,13 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import dash
 from dash.dependencies import Input, Output, State
-
+from app import app
 import dash_html_components as html
-import dash_core_components as dcc
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import dash_table 
 import plotly.graph_objects as go
 
-app = dash.Dash(external_stylesheets=[dbc.themes.LUX],suppress_callback_exceptions=True)
 
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.csv'
 df = pd.read_csv(df_url).dropna()
@@ -61,16 +59,16 @@ sidebar = html.Div(
     style=SIDEBAR_STYLE,
 )
 
-content = html.Div(id="page-content", style=CONTENT_STYLE)
+content = html.Div(id="page-content1", style=CONTENT_STYLE)
 
-app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+layout = html.Div([dcc.Location(id="url"), sidebar, content])
 
 @app.callback(
-    Output('table-sorting-filtering', 'data'),
-    Input('table-sorting-filtering', "page_current"),
-    Input('table-sorting-filtering', "page_size"),
-    Input('table-sorting-filtering', 'sort_by'),
-    Input('table-sorting-filtering', 'filter_query'))
+    Output('table-sorting-filtering1', 'data'),
+    Input('table-sorting-filtering1', "page_current"),
+    Input('table-sorting-filtering1', "page_size"),
+    Input('table-sorting-filtering1', 'sort_by'),
+    Input('table-sorting-filtering1', 'filter_query'))
 def update_table(page_current, page_size, sort_by, filter):
     filtering_expressions = filter.split(' && ')
     dff = df
@@ -103,7 +101,7 @@ def update_table(page_current, page_size, sort_by, filter):
 
 
 
-@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+@app.callback(Output("page-content1", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
         return [
@@ -112,7 +110,7 @@ def render_page_content(pathname):
                                     ),
                                     html.Br([]),
                                     dash_table.DataTable(
-                                    id='table-sorting-filtering',
+                                    id='table-sorting-filtering1',
                                      columns=[
                                     {'name': 'type', 'id': 'type', 'type': 'text'},
                                     {'name': 'fixed acidity', 'id': 'fixed acidity', 'type': 'numeric'},
@@ -138,6 +136,7 @@ def render_page_content(pathname):
                                         sort_action='custom',
                                         sort_mode='multi',
                                         sort_by=[]),
+                                        dcc.Link('Go to App 1', href='/pages/backpack'),
         ]
     elif pathname == "/page-1":
         return html.P("This is the content of page 1. Yay!")
@@ -185,9 +184,3 @@ def split_filter_part(filter_part):
 
     return [None] * 3
 
-
-
-
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
