@@ -6,6 +6,9 @@ import dash_core_components as dcc
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import dash_table
+import plotly.graph_objects as go
+from sklearn.model_selection import train_test_split
+from sklearn import linear_model, tree, neighbors
 
 
 app = dash.Dash(__name__, title="Dash App")
@@ -16,8 +19,21 @@ import json
 from dash.dependencies import Input, Output
 
 
+
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/MyData.csv'
 df = pd.read_csv(df_url).dropna()
+df['BackProblems'] = df['BackProblems'].astype('category')
+df['Sex'] = df['Sex'].astype('category')
+df['Major'] = df['Major'].astype('category')
+df['Status'] = df['Status'].astype('category')
+
+X = df.Ratio.values[:, None]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, df.BackProblems, random_state=42)
+
+models = {'Regression': linear_model.LogisticRegression,
+          'Decision Tree': tree.DecisionTreeClassifier,
+          'k-NN': neighbors.KNeighborsClassifier}
 
 
 PAGE_SIZE = 5
@@ -55,6 +71,32 @@ def create_layout(app):
         marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
         value=[0, 6]
     ),
+    html.P("x-axis:"),
+    dcc.Checklist(
+        id='x-axis', 
+        options=[{'value': x, 'label': x} 
+                 for x in ['BackProblems', 'Major', 'Sex', 'Status']],
+        value=['BackProblems'], 
+        labelStyle={'display': 'inline-block'}
+    ),
+    html.P("y-axis:"),
+    dcc.RadioItems(
+        id='y-axis', 
+        options=[{'value': x, 'label': x} 
+                 for x in ['BackpackWeight', 'BodyWeight', 'Ratio','Year','Units']],
+        value='BackpackWeight', 
+        labelStyle={'display': 'inline-block'}
+    ),
+    dcc.Graph(id="box-plot"),
+    html.P("Select Model:"),
+    dcc.Dropdown(
+        id='model-name',
+        options=[{'label': x, 'value': x} 
+                 for x in models],
+        value='Regression',
+        clearable=False
+    ),
+    dcc.Graph(id="graph")
 ])
 
 operators = [['ge ', '>='],
@@ -136,6 +178,37 @@ def update_bar_chart(slider_range):
         df[mask], x="BodyWeight", y="BackpackWeight", 
         color="BackProblems", size='Ratio', 
         hover_data=['Year'])
+    return fig
+
+
+@app.callback(
+    Output("box-plot", "figure"), 
+    [Input("x-axis", "value"), 
+     Input("y-axis", "value")])
+def generate_chart(x, y):
+    fig = px.box(df, x=x, y=y)
+    return fig
+
+
+@app.callback(
+    Output("graph", "figure"), 
+    [Input('model-name', "value")])
+def train_and_display(name):
+    model = models[name]()
+    model.fit(X_train, y_train)
+
+    x_range = np.linspace(X.min(), X.max(), 100)
+    y_range = model.predict(x_range.reshape(-1, 1))
+
+    fig = go.Figure([
+        go.Scatter(x=X_train.squeeze(), y=y_train, 
+                   name='train', mode='markers'),
+        go.Scatter(x=X_test.squeeze(), y=y_test, 
+                   name='test', mode='markers'),
+        go.Scatter(x=x_range, y=y_range, 
+                   name='prediction')
+    ])
+
     return fig
 
 if __name__ == '__main__':
