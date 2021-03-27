@@ -21,6 +21,9 @@ from sklearn import linear_model, tree, neighbors
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/MyData.csv'
 df = pd.read_csv(df_url).dropna()
 df['BackProblems'] = df['BackProblems'].astype('category')
+df['Sex'] = df['Sex'].astype('category')
+df['Major'] = df['Major'].astype('category')
+df['Status'] = df['Status'].astype('category')
 
 X = df.Ratio.values[:, None]
 X_train, X_test, y_train, y_test = train_test_split(
