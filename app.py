@@ -68,6 +68,23 @@ app.layout = html.Div([
         marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
         value=[0, 6]
     ),
+     html.P("x-axis:"),
+    dcc.Checklist(
+        id='x-axis', 
+        options=[{'value': x, 'label': x} 
+                 for x in ['BackProblems', 'Major', 'Sex', 'Status']],
+        value=['BackProblems'], 
+        labelStyle={'display': 'inline-block'}
+    ),
+    html.P("y-axis:"),
+    dcc.RadioItems(
+        id='y-axis', 
+        options=[{'value': x, 'label': x} 
+                 for x in ['BackpackWeight', 'BodyWeight', 'Ratio','Year','Units']],
+        value='BackpackWeight', 
+        labelStyle={'display': 'inline-block'}
+    ),
+    dcc.Graph(id="box-plot"),
     html.P("Select Model:"),
     dcc.Dropdown(
         id='model-name',
@@ -159,6 +176,15 @@ def update_bar_chart(slider_range):
         color="BackProblems", size='Ratio', 
         hover_data=['Year'])
     return fig
+
+@app.callback(
+    Output("box-plot", "figure"), 
+    [Input("x-axis", "value"), 
+     Input("y-axis", "value")])
+def generate_chart(x, y):
+    fig = px.box(df, x=x, y=y)
+    return fig
+
 
 @app.callback(
     Output("graph", "figure"), 
