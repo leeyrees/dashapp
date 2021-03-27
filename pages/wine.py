@@ -39,7 +39,8 @@ fig_dropdown = html.Div([
     )])
 fig_plot = html.Div(id='fig_plot')
 
-app.layout = html.Div([
+def create_layout(app):
+    return html.Div([
     dash_table.DataTable(
     id='table-sorting-filtering',
     columns=[
