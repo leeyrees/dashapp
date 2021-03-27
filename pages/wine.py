@@ -9,7 +9,7 @@ import dash_table
 import plotly.graph_objects as go
 
 
-app = dash.Dash(__name__, title="Dash App Wine Dataset")
+app = dash.Dash(__name__, title="Dash App Wine Dataset",external_stylesheets=[dbc.themes.LUX])
 
 import numpy as np
 import pandas as pd
@@ -140,9 +140,9 @@ app.layout = html.Div([
                                         value='citric acid', 
                                         labelStyle={'display': 'inline-block'}
                                     ),
-                                    dcc.Graph(id="box-plot"),
-                                    
-                                ]),
+                                    dcc.Graph(id="box-plot")],
+                                     style={'width': '48%', 'align': 'left', 'display': 'inline-block'}
+                                ),
                             html.Div([
                                 html.P("x-axis:"),
                                     dcc.Checklist(
@@ -152,11 +152,12 @@ app.layout = html.Div([
                                         value=['citric acid'], 
                                         labelStyle={'display': 'inline-block'}
                                     ),
-                                    dcc.Graph(id="hist-plot"),
+                                    dcc.Graph(id="hist-plot")],
+                                     style={'width': '48%', 'align': 'right', 'display': 'inline-block'}),
                                     
                                             
                                        
-                                ]),
+                                
                         ]),
     
     dcc.Graph(id="scatter-plot"),
@@ -256,26 +257,10 @@ def update_table(page_current, page_size, sort_by, filter):
 def update_bar_chart(slider_range):
     low, high = slider_range
     mask = (df['quality'] > low) & (df['quality'] < high)
-    fig ={ px.scatter(
+    fig = px.scatter(
         df[mask], x="total sulfur dioxide", y="alcohol", 
         color="type", 
-        hover_data=['quality']),
-        "layout": go.Layout(
-          autosize=True,
-           width=700,
-             height=200,
-            font={"family": "Raleway", "size": 10},
-               margin={
-                 "r": 30,
-                    "t": 30,
-                  "b": 30,
-                   "l": 30,
-                },
-                 showlegend=True,
-                 titlefont={
-                "family": "Raleway",
-                   "size": 10,
-                },},
+        hover_data=['quality'])
     return fig
 
 
@@ -323,23 +308,7 @@ def train_and_display(name):
     [Input("x-axis", "value"), 
      Input("y-axis", "value")])
 def generate_chart(x, y):
-    fig = {px.box(df, x=x, y=y),
-    "layout": go.Layout(
-                                                autosize=True,
-                                                width=700,
-                                                height=200,
-                                                font={"family": "Raleway", "size": 10},
-                                                margin={
-                                                    "r": 30,
-                                                    "t": 30,
-                                                    "b": 30,
-                                                    "l": 30,
-                                                },
-                                                showlegend=True,
-                                                titlefont={
-                                                    "family": "Raleway",
-                                                    "size": 10,
-                                                },},
+    fig = px.box(df, x=x, y=y)
     return fig
 
 @app.callback(
