@@ -58,6 +58,8 @@ MODELS = {'Logistic': linear_model.LogisticRegression,
           'k-NN': neighbors.KNeighborsClassifier}
 
 
+
+
 app.layout = html.Div([
     dash_table.DataTable(
     id='table-sorting-filtering',
