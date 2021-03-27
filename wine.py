@@ -15,11 +15,17 @@ import numpy as np
 import pandas as pd
 import json
 from dash.dependencies import Input, Output
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_curve, auc
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn import linear_model, tree, neighbors
+import sklearn.metrics as metrics
 
 
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.csv'
 df = pd.read_csv(df_url).dropna()
-
+df['type'] = df['type'].astype('category')
 markdown_hists = '''
 
 
@@ -38,6 +44,19 @@ fig_dropdown = html.Div([
         value=None
     )])
 fig_plot = html.Div(id='fig_plot')
+
+np.random.seed(0)
+X = df.drop('type', axis = 1)
+
+y = df['type'].map({'white': 1, 'red': 0})
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, random_state=42)
+
+MODELS = {'Logistic': linear_model.LogisticRegression,
+          'Decision Tree': tree.DecisionTreeClassifier,
+          'k-NN': neighbors.KNeighborsClassifier}
+
 
 app.layout = html.Div([
     dash_table.DataTable(
@@ -78,7 +97,16 @@ app.layout = html.Div([
     ),
     dcc.Markdown(markdown_hists),
     fig_dropdown,
-    fig_plot
+    fig_plot,
+    html.P("Train Model:"),
+    dcc.Dropdown(
+        id='model-name',
+        options=[{'label': x, 'value': x} 
+                 for x in MODELS],
+        value='Logistic',
+        clearable=False
+    ),
+    dcc.Graph(id="graph")
 ])
 
 operators = [['ge ', '>='],
@@ -177,6 +205,30 @@ def name_to_figure(fig_name):
     elif fig_name == 'alcohol': 
         figure.add_trace(go.Histogram(x=df['alcohol']))
     return dcc.Graph(figure=figure)
+
+@app.callback(
+    Output("graph", "figure"), 
+    [Input('model-name', "value")])
+def train_and_display(name):
+    model = MODELS[name]()
+    model.fit(X_train, y_train)
+
+    y_score = model.predict_proba(X_test)[:, 1]
+
+    fpr, tpr, thresholds = metrics.roc_curve(y_test, y_score)
+    score = metrics.auc(fpr, tpr)
+
+    fig = px.area(
+        x=fpr, y=tpr,
+        title=f'ROC Curve (AUC={score:.4f})',
+        labels=dict(
+            x='False Positive Rate', 
+            y='True Positive Rate'))
+    fig.add_shape(
+        type='line', line=dict(dash='dash'),
+        x0=0, x1=1, y0=0, y1=1)
+
+    return fig
 
 
 if __name__ == '__main__':
