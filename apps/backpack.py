@@ -40,82 +40,135 @@ PAGE_SIZE = 5
 layout = html.Div([
     dcc.Tabs([
         dcc.Tab(label = "Data table", children = [
-            dash_table.DataTable(
-                id='table-sorting-filtering',
-                    columns=[
-                        {'name': 'BackpackWeight', 'id': 'BackpackWeight', 'type': 'numeric'},
-                        {'name': 'BodyWeight', 'id': 'BodyWeight', 'type': 'numeric'},
-                        {'name': 'Ratio', 'id': 'Ratio', 'type': 'numeric'},
-                        {'name': 'BackProblems', 'id': 'BackProblems', 'type': 'numeric'},
-                        {'name': 'Major', 'id' :'Major', 'type': 'text'},
-                        {'name': 'Year', 'id' :'Year', 'type': 'numeric'},
-                        {'name': 'Sex', 'id' :'Sex', 'type': 'text'},
-                        {'name': 'Status', 'id' :'Status', 'type': 'text'},
-                        {'name': 'Units', 'id' :'Units', 'type': 'numeric'}
-                    ],
-                    page_current= 0,
-                    page_size= PAGE_SIZE,
-                    page_action='custom',
+            dbc.Container([
+                dbc.Row([
+                    dbc.Col(html.H1("BACKPACK DATASET", className="text-center")
+                    , className="mb-5 mt-5"),
+                ]),
+                dbc.Row([
+                   html.Div([
+                                    html.Br([]),
+                                    html.H3(
+                                        "\
+                                    In this page we can find an analysis of the Backpack dataset, based on the previous \
+                                    analysis made in the Shiny App of Leyre Sastre.",
+                                        
+                                        className="row",
+                                    ),
+                                ],),
 
-                    filter_action='custom',
-                    filter_query='',
+               ]),
+               dbc.Row([hmtl.H6(
+                   ["Data Table"], className= "subtitle padded"
+                ),
+                html.Br([]),
+                dash_table.DataTable(
+                    id='table-sorting-filtering',
+                        columns=[
+                            {'name': 'BackpackWeight', 'id': 'BackpackWeight', 'type': 'numeric'},
+                            {'name': 'BodyWeight', 'id': 'BodyWeight', 'type': 'numeric'},
+                            {'name': 'Ratio', 'id': 'Ratio', 'type': 'numeric'},
+                            {'name': 'BackProblems', 'id': 'BackProblems', 'type': 'numeric'},
+                            {'name': 'Major', 'id' :'Major', 'type': 'text'},
+                            {'name': 'Year', 'id' :'Year', 'type': 'numeric'},
+                            {'name': 'Sex', 'id' :'Sex', 'type': 'text'},
+                            {'name': 'Status', 'id' :'Status', 'type': 'text'},
+                            {'name': 'Units', 'id' :'Units', 'type': 'numeric'}
+                        ],
+                        page_current= 0,
+                        page_size= PAGE_SIZE,
+                        page_action='custom',
 
-                    sort_action='custom',
-                    sort_mode='multi',
-                    sort_by=[]
-            ),
+                        filter_action='custom',
+                        filter_query='',
+
+                        sort_action='custom',
+                        sort_mode='multi',
+                        sort_by=[],
+                        style_header={'backgroundColor': 'rgb(30, 30, 30)'},
+                        style_cell={
+                                    'backgroundColor': 'rgb(50, 50, 50)',
+                                    'color': 'white'
+                        },
+                ),
+            ]),
+            ])
         ]),
         dcc.Tab(label = "Plots", children = [
-            html.P("Scatter Plot"),
-            dcc.Dropdown(
-                id = "cont-variable-1",
-                options=[{'label': i, 'value': i} for i in ['BackpackWeight', 'BodyWeight','Year','Units']],
-                placeholder ="Select the first variable: ", 
-                value = "BackpackWeight"
-            ),
-            dcc.Dropdown(
-                id = "cont-variable-2",
-                options = [{'label': i, 'value': i} for i in ['BackpackWeight', 'BodyWeight','Year','Units']],
-                placeholder ="Select the second variable: ", 
-                value = "BodyWeight"
-            ),
-            dcc.Graph(id="scatter-plot"),
-                html.P("Year"),
-                dcc.RangeSlider(
-                    id='range-slider',
-                    min=0, max=6, step=1,
-                    marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
-                    value=[0, 6]
-                ),
-                html.P("x-axis:"),
-                dcc.Checklist(
-                    id='x-axis', 
-                    options=[{'value': x, 'label': x} 
-                            for x in ['BackProblems', 'Major', 'Sex', 'Status']],
-                    value=['BackProblems'], 
-                    labelStyle={'display': 'inline-block'}
-                ),
-                html.P("y-axis:"),
-                dcc.RadioItems(
-                    id='y-axis', 
-                    options=[{'value': x, 'label': x} 
-                            for x in ['BackpackWeight', 'BodyWeight', 'Ratio','Year','Units']],
-                    value='BackpackWeight', 
-                    labelStyle={'display': 'inline-block'}
-                ),
-                dcc.Graph(id="box-plot"),
-    ]),
+            dbc.Container([
+                dbc.Row([
+                    dcb.col([
+                        html.H3("Scatter Plot"),
+
+                        html.P("Select the first variable"),
+                        html.Br([]),
+                        dcc.Dropdown(
+                            id = "cont-variable-1",
+                            options=[{'label': i, 'value': i} for i in ['BackpackWeight', 'BodyWeight','Year','Units']],
+                            placeholder ="Select the first variable: ", 
+                            value = "BackpackWeight"
+                        ),
+                        html.Br([]),
+                        html.P("Select the Second variable"),
+                        dcc.Dropdown(
+                            id = "cont-variable-2",
+                            options = [{'label': i, 'value': i} for i in ['BackpackWeight', 'BodyWeight','Year','Units']],
+                            placeholder ="Select the second variable: ", 
+                            value = "BodyWeight"
+                        ),
+                        dcc.Graph(id="scatter-plot"),
+                        html.P("Year"),
+                        dcc.RangeSlider(
+                            id='range-slider',
+                            min=0, max=6, step=1,
+                            marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
+                            value=[0, 6]
+                        ),
+                    ]),
+                ]),
+                dbc.Row([
+                    dbc.Col([
+                        html.H3("Box Plot"),
+                        html.P("x-axis:"),
+                        dcc.Checklist(
+                            id='X-axis', 
+                            options=[{'value': x, 'label': x} 
+                                for x in ['BackProblems', 'Major', 'Sex', 'Status']],
+                            value=['BackProblems'], 
+                            labelStyle={'display': 'inline-block'}
+                        ),
+                        html.P("Y-axis:"),
+                        dcc.RadioItems(
+                            id='y-axis', 
+                            options=[{'value': x, 'label': x} 
+                                    for x in ['BackpackWeight', 'BodyWeight', 'Ratio','Year','Units']],
+                            value='BackpackWeight', 
+                            labelStyle={'display': 'inline-block'}
+                        ),
+                        dcc.Graph(id="box-plot"),
+                    ]),
+                ]),
+            ]),
+        ]),
     dcc.Tab(label = "Regression and prediction", children = [
-        html.P("Select Model:"),
-        dcc.Dropdown(
-            id='model-name',
-            options=[{'label': x, 'value': x} 
-                    for x in models],
-            value='Regression',
-            clearable=False
-        ),
-        dcc.Graph(id="graph")
-        ])
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    html.H1("Prediction of Back problems"),
+                    html.BR([]),
+                    html.P("Select Model:"),
+                    dcc.Dropdown(
+                    id='model-name',
+                    options=[{'label': x, 'value': x} 
+                            for x in models],
+                    value='Regression',
+                    clearable=False
+                    ),
+                    dcc.Graph(id="graph")
+                ]),
+            ]),
+        ]),
+    ])
     ])
 ])  
 
