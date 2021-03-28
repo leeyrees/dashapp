@@ -58,7 +58,7 @@ layout = html.Div([
                                 ],),
 
                ]),
-               dbc.Row([hmtl.H6(
+               dbc.Row([html.H6(
                    ["Data Table"], className= "subtitle padded"
                 ),
                 html.Br([]),
@@ -97,7 +97,7 @@ layout = html.Div([
         dcc.Tab(label = "Plots", children = [
             dbc.Container([
                 dbc.Row([
-                    dcb.col([
+                    dbc.Col([
                         html.H3("Scatter Plot"),
 
                         html.P("Select the first variable"),
@@ -129,9 +129,9 @@ layout = html.Div([
                 dbc.Row([
                     dbc.Col([
                         html.H3("Box Plot"),
-                        html.P("x-axis:"),
+                        html.P("X-axis:"),
                         dcc.Checklist(
-                            id='X-axis', 
+                            id='x-axis', 
                             options=[{'value': x, 'label': x} 
                                 for x in ['BackProblems', 'Major', 'Sex', 'Status']],
                             value=['BackProblems'], 
@@ -155,7 +155,7 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.H1("Prediction of Back problems"),
-                    html.BR([]),
+                    html.Br([]),
                     html.P("Select Model:"),
                     dcc.Dropdown(
                     id='model-name',
