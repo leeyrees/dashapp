@@ -27,9 +27,9 @@ navbar = dbc.Navbar(
                 # Use row and col to control vertical alignment of logo / brand
                 dbc.Row(
                     [
-                        dbc.Col(html.Img(src="/assets/wine.png", height="30px")),
+                        dbc.Col(html.Img(src="/assets/wine1.png", height="30px")),
                         dbc.Col(dbc.NavbarBrand("DASH PROJECT", className="ml-2")),
-                        dbc.Col(html.Img(src="/assets/backpack.png", height="30px")),
+                        dbc.Col(html.Img(src="/assets/backpack1.png", height="30px")),
                     ],
                     align="center",
                     no_gutters=True,
