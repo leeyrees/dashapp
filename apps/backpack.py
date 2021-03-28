@@ -148,6 +148,13 @@ layout = html.Div([
                             value='BackpackWeight', 
                             labelStyle={'display': 'inline-block'}
                         ),
+                        html.Br([]),
+                        html.Div(className='submit', children=[
+
+                                html.Button('Update chart', id='submit1', n_clicks=0)
+
+                            ]),
+                        html.Br([]),
                         dcc.Graph(id="box-plot"),
                     ]),
                 ]),
@@ -258,14 +265,18 @@ def update_bar_chart(slider_range, selected_var_1, selected_var_2):
         hover_data=['Year'])
     return fig
 
-
 @app.callback(
-    Output("box-plot", "figure"), 
-    [Input("x-axis", "value"), 
-     Input("y-axis", "value")])
-def generate_chart(x, y):
-    fig = px.box(df, x=x, y=y)
-    return fig
+    Output('box-plot', 'figure'),
+    [Input('submit1', 'n_clicks'),
+     Input('x-axis','value')],
+    [State('y-axis', 'value')]
+)
+def update_chart(clicks, x,y):
+    if clicks:
+        return px.box(df, x=x, y=y)
+    else:
+        return px.box()
+
 
 
 @app.callback(

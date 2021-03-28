@@ -130,12 +130,22 @@ layout = html.Div([
                         dbc.Col([
                             html.H3("Histogram"),
                             dcc.Dropdown(
-                                id = "cont-variable",
+                                id = "contvariable",
                                 options=[{'label': i, 'value': i} for i in X.columns],
                                 value='fixed acidity', 
                                 placeholder ="Select a variable: "
                             ),
-                            dcc.Graph(id="hist"),
+                            html.Br([]),
+
+                            html.Div(className='submit', children=[
+
+                                html.Button('Update chart', id='submit', n_clicks=0)
+
+                            ]),
+                            dcc.Graph(
+                                id='hist',
+                                figure={}
+                            ),
                         ]),
                     ]),
 
@@ -314,10 +324,21 @@ def generate_chart(y):
 
 @app.callback(
     Output('hist', 'figure'),
-    Input('cont-variable', 'value'))
-def update_hist(x):
-    fig = px.histogram(df, x=x)
-    return fig
+    [Input('submit', 'n_clicks')],
+    [State('contvariable', 'value')]
+)
+def update_chart(clicks, x):
+    if clicks:
+        return px.histogram(df,x=x)
+    else:
+        return px.histogram()
+
+#@app.callback(
+#    Output('hist', 'figure'),
+ #   Input('cont-variable', 'value'))
+#def update_hist(x):
+ #   fig = px.histogram(df, x=x)
+  #  return fig
 
 
 if __name__ == '__main__':
