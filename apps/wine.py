@@ -98,11 +98,7 @@ layout = html.Div([
                                      {'name': 'alcohol', 'id': 'alcohol', 'type': 'numeric'},
                                      {'name': 'quality', 'id': 'quality', 'type': 'numeric'}
                                     ],
-                                    fixed_rows={'headers': True},
-                                    style_cell={
-                                        'minWidth': 95, 'maxWidth': 95, 'width': 95
-                                    },
-                                   
+                                                                     
                                     
                                     
                                         page_current= 0,
