@@ -109,10 +109,14 @@ layout = html.Div([
                                         sort_mode='multi',
                                         sort_by=[],
                                     style_header={'backgroundColor': 'rgb(30, 30, 30)'},
+                                    style_table={'overflowX': 'auto'},
                                     style_cell={
                                         'backgroundColor': 'rgb(50, 50, 50)',
-                                        'color': 'white'
-                                    },
+                                        'color': 'white',
+                                        
+                                        }
+                                    ,
+                                    
                                     ),
 
                 ]),
