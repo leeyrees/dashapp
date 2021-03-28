@@ -38,65 +38,73 @@ models = {'Regression': linear_model.LogisticRegression,
 
 PAGE_SIZE = 5
 layout = html.Div([
-    dash_table.DataTable(
-    id='table-sorting-filtering',
-    columns=[
-        {'name': 'BackpackWeight', 'id': 'BackpackWeight', 'type': 'numeric'},
-        {'name': 'BodyWeight', 'id': 'BodyWeight', 'type': 'numeric'},
-        {'name': 'Ratio', 'id': 'Ratio', 'type': 'numeric'},
-        {'name': 'BackProblems', 'id': 'BackProblems', 'type': 'numeric'},
-        {'name': 'Major', 'id' :'Major', 'type': 'text'},
-        {'name': 'Year', 'id' :'Year', 'type': 'numeric'},
-        {'name': 'Sex', 'id' :'Sex', 'type': 'text'},
-        {'name': 'Status', 'id' :'Status', 'type': 'text'},
-        {'name': 'Units', 'id' :'Units', 'type': 'numeric'}
-    ],
-    page_current= 0,
-    page_size= PAGE_SIZE,
-    page_action='custom',
+    dcc.Tabs([
+        dcc.Tab(label = "Data table", children = [
+            dash_table.DataTable(
+                id='table-sorting-filtering',
+                    columns=[
+                        {'name': 'BackpackWeight', 'id': 'BackpackWeight', 'type': 'numeric'},
+                        {'name': 'BodyWeight', 'id': 'BodyWeight', 'type': 'numeric'},
+                        {'name': 'Ratio', 'id': 'Ratio', 'type': 'numeric'},
+                        {'name': 'BackProblems', 'id': 'BackProblems', 'type': 'numeric'},
+                        {'name': 'Major', 'id' :'Major', 'type': 'text'},
+                        {'name': 'Year', 'id' :'Year', 'type': 'numeric'},
+                        {'name': 'Sex', 'id' :'Sex', 'type': 'text'},
+                        {'name': 'Status', 'id' :'Status', 'type': 'text'},
+                        {'name': 'Units', 'id' :'Units', 'type': 'numeric'}
+                    ],
+                    page_current= 0,
+                    page_size= PAGE_SIZE,
+                    page_action='custom',
 
-    filter_action='custom',
-    filter_query='',
+                    filter_action='custom',
+                    filter_query='',
 
-    sort_action='custom',
-    sort_mode='multi',
-    sort_by=[]
-),
-    dcc.Graph(id="scatter-plot"),
-    html.P("Year"),
-    dcc.RangeSlider(
-        id='range-slider',
-        min=0, max=6, step=1,
-        marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
-        value=[0, 6]
-    ),
-    html.P("x-axis:"),
-    dcc.Checklist(
-        id='x-axis', 
-        options=[{'value': x, 'label': x} 
-                 for x in ['BackProblems', 'Major', 'Sex', 'Status']],
-        value=['BackProblems'], 
-        labelStyle={'display': 'inline-block'}
-    ),
-    html.P("y-axis:"),
-    dcc.RadioItems(
-        id='y-axis', 
-        options=[{'value': x, 'label': x} 
-                 for x in ['BackpackWeight', 'BodyWeight', 'Ratio','Year','Units']],
-        value='BackpackWeight', 
-        labelStyle={'display': 'inline-block'}
-    ),
-    dcc.Graph(id="box-plot"),
-    html.P("Select Model:"),
-    dcc.Dropdown(
-        id='model-name',
-        options=[{'label': x, 'value': x} 
-                 for x in models],
-        value='Regression',
-        clearable=False
-    ),
-    dcc.Graph(id="graph")
-])
+                    sort_action='custom',
+                    sort_mode='multi',
+                    sort_by=[]
+            ),
+        ]),
+        dcc.Tab(label = "Plots", children = [
+            dcc.Graph(id="scatter-plot"),
+                html.P("Year"),
+                dcc.RangeSlider(
+                    id='range-slider',
+                    min=0, max=6, step=1,
+                    marks={0: '0', 1: '1', 2: '2', 3: '3', 4:'4', 5:'5', 6: '6'},
+                    value=[0, 6]
+                ),
+                html.P("x-axis:"),
+                dcc.Checklist(
+                    id='x-axis', 
+                    options=[{'value': x, 'label': x} 
+                            for x in ['BackProblems', 'Major', 'Sex', 'Status']],
+                    value=['BackProblems'], 
+                    labelStyle={'display': 'inline-block'}
+                ),
+                html.P("y-axis:"),
+                dcc.RadioItems(
+                    id='y-axis', 
+                    options=[{'value': x, 'label': x} 
+                            for x in ['BackpackWeight', 'BodyWeight', 'Ratio','Year','Units']],
+                    value='BackpackWeight', 
+                    labelStyle={'display': 'inline-block'}
+                ),
+                dcc.Graph(id="box-plot"),
+    ]),
+    dcc.Tab(label = "Regression and prediction", children = [
+        html.P("Select Model:"),
+        dcc.Dropdown(
+            id='model-name',
+            options=[{'label': x, 'value': x} 
+                    for x in models],
+            value='Regression',
+            clearable=False
+        ),
+        dcc.Graph(id="graph")
+        ])
+    ])
+])  
 
 operators = [['ge ', '>='],
              ['le ', '<='],
