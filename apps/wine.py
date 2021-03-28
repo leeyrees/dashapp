@@ -97,7 +97,12 @@ layout = html.Div([
 
                                         sort_action='custom',
                                         sort_mode='multi',
-                                        sort_by=[]
+                                        sort_by=[],
+                                    style_header={'backgroundColor': 'rgb(30, 30, 30)'},
+                                    style_cell={
+                                        'backgroundColor': 'rgb(50, 50, 50)',
+                                        'color': 'white'
+                                    },
                                     ),
 
                 ]),
@@ -110,15 +115,8 @@ layout = html.Div([
 
                     dbc.Row([
                         dbc.Col([
-                            html.P("x-axis:"),
-                            dcc.Checklist(
-                                id='x-axis', 
-                                options=[{'value': x, 'label': x} 
-                                        for x in ['type']],
-                                value=['type'], 
-                                labelStyle={'display': 'inline-block'}
-                            ),
-                            html.P("y-axis:"),
+                            html.H3("Boxplot:"), 
+                            html.H3("y-axis:"),
                             dcc.RadioItems(
                                 id='y-axis', 
                                 options=[{'value': x, 'label': x} 
@@ -130,10 +128,11 @@ layout = html.Div([
                          ] ),
                         
                         dbc.Col([
-                            html.P("Histogram"),
+                            html.H3("Histogram"),
                             dcc.Dropdown(
                                 id = "cont-variable",
                                 options=[{'label': i, 'value': i} for i in X.columns],
+                                value='fixed acidity', 
                                 placeholder ="Select a variable: "
                             ),
                             dcc.Graph(id="hist"),
@@ -141,6 +140,7 @@ layout = html.Div([
                     ]),
 
                     dbc.Row([
+                        dbc.Col([ 
                         dcc.Graph(id="scatter-plot1"),
                         html.H3("quality"),
                         dcc.RangeSlider(
@@ -149,6 +149,7 @@ layout = html.Div([
                             marks={3: '3', 4: '4', 5: '5', 6: '6', 7:'7', 8:'8', 9: '9'},
                             value=[3, 9]
                         ),
+                        ]),
                     ]),
                 ]),
             ]),
@@ -156,6 +157,7 @@ layout = html.Div([
 
                 dbc.Container([
                     dbc.Row([
+                        dbc.Col([
                         html.H1("Train Model:"),
                         dcc.Dropdown(
                             id='model-name',
@@ -165,6 +167,7 @@ layout = html.Div([
                             clearable=False
                         ),
                         dcc.Graph(id="graph1"),
+                        ])
 
                     ]),
                 ]),
@@ -284,10 +287,9 @@ def train_and_display(name):
 
 @app.callback(
     Output("box-plot1", "figure"), 
-    [Input("x-axis", "value"), 
-     Input("y-axis", "value")])
-def generate_chart(x, y):
-    fig = px.box(df, x=x, y=y)
+    [Input("y-axis", "value")])
+def generate_chart(y):
+    fig = px.box(df, x="type", y=y)
     return fig
 
 @app.callback(
