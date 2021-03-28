@@ -9,6 +9,15 @@ from apps import backpack, wine, home
 
 # building the navigation bar
 # https://github.com/facultyai/dash-bootstrap-components/blob/master/examples/advanced-component-usage/Navbars.py
+
+nav_item = dbc.NavItem([
+    dbc.Row([
+        dbc.Col(dbc.NavLink("Home", href="/haha")),
+        dbc.Col(dbc.NavLink("Backpack", href="/backpack")),
+        dbc.Col(dbc.NavLink("wine", href="/wine")),
+    ])
+])
+
 dropdown = dbc.DropdownMenu(
     children=[
         dbc.DropdownMenuItem("Home", href="/haha"),
@@ -40,7 +49,7 @@ navbar = dbc.Navbar(
             dbc.Collapse(
                 dbc.Nav(
                     # right align dropdown menu with ml-auto className
-                    [dropdown], className="ml-auto", navbar=True
+                    [nav_item, dropdown], className="ml-auto", navbar=True
                 ),
                 id="navbar-collapse2",
                 navbar=True,

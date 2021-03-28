@@ -13,13 +13,18 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 layout = html.Div([
     dbc.Container([
         dbc.Row([
-            dbc.Col(html.H1("Welcome to the COVID-19 dashboard", className="text-center")
+            dbc.Col(html.H1("Welcome to our DASH project", className="text-center")
                     , className="mb-5 mt-5")
         ]),
         dbc.Row([
-            dbc.Col(html.H5(children='This app marks my very first attempt at using Plotly, Dash and Bootstrap! '
-                                     )
-                    , className="mb-4")
+            dbc.Col(html.H5(children='This app shows the statistical analysis of two datasets: a wine dataset and a backpack data set' 
+            'Regarding the sources of these datasets, the Backpack one can be found in the R library Stat2Data. The wine dataset can be found in the following link:')),
+           
+            dbc.Col(dbc.Button("Wine dataset", href="https://www.kaggle.com/rajyellow46/wine-quality",
+                                                                   color="primary"),
+                                                        className="mt-3")
+                                               
+                                       
             ]),
 
         dbc.Row([
