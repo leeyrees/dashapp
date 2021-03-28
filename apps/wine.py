@@ -33,14 +33,6 @@ markdown_hists = '''
 '''
 
 PAGE_SIZE = 5
-fig_names = ['citric acid', 'alcohol']
-fig_dropdown = html.Div([
-    dcc.Dropdown(
-        id='fig_dropdown',
-        options=[{'label': x, 'value': x} for x in fig_names],
-        value=None
-    )])
-fig_plot = html.Div(id='fig_plot')
 
 np.random.seed(0)
 X = df.drop('type', axis = 1)
@@ -59,26 +51,29 @@ MODELS = {'Logistic': linear_model.LogisticRegression,
 
 layout = html.Div([
 
-        # Row 1
-                    html.Div([
-                            html.Div([
-                                    html.H5("WINE DATASET"),
+        dcc.Tabs([
+         
+         dcc.Tab(label = "Wine data table", children = [ 
+
+           dbc.Container([
+               dbc.Row([
+                   dbc.Col(html.H1("WINE DATASET", className="text-center")
+                    , className="mb-5 mt-5"),
+               ]),
+               dbc.Row([
+                   html.Div([
                                     html.Br([]),
-                                    html.P(
+                                    html.H3(
                                         "\
                                     In this page we are going to carry out an analysis of the wine dataset \
                                     from the Shiny App of Marta Ilundain (github: ENLACE).",
                                         
                                         className="row",
                                     ),
-                                ],
-                                className="product",
-                            )
-                        ], className="row",),
-        # Row 2
-                    html.Div([
-                            html.Div([
-                                    html.H6(
+                                ],),
+
+               ]),
+                dbc.Row([ html.H6(
                                         ["Data table"], className="subtitle padded"
                                     ),
                                     html.Br([]),
@@ -110,19 +105,18 @@ layout = html.Div([
                                         sort_mode='multi',
                                         sort_by=[]
                                     ),
-                                    
-                                ],
-                                
-                            )
-                        ],
-                        
-                    ),
+
+                ]),
+           ])]),
+
             # Row 3
-                    html.Div(
-                        [
-                            html.Div(
-                                [
-                                    html.P("x-axis:"),
+            dcc.Tab(label = "Wine data plots", children = [ 
+
+                dbc.Container([
+
+                    dbc.Row([
+                        dbc.Col([
+                            html.P("x-axis:"),
                                     dcc.Checklist(
                                         id='x-axis', 
                                         options=[{'value': x, 'label': x} 
@@ -136,50 +130,59 @@ layout = html.Div([
                                         options=[{'value': x, 'label': x} 
                                                 for x in ['fixed acidity', 'citric acid', 'density','pH','alcohol']],
                                         value='citric acid', 
-                                        labelStyle={'display': 'inline-block'}
+                                        labelStyle={'display': 'inline-block'},
                                     ),
-                                    dcc.Graph(id="box-plot1")],
-                                     style={'width': '48%', 'align': 'left', 'display': 'inline-block'}
-                                ),
-                            html.Div([
-                                html.P("x-axis:"),
-                                    dcc.Checklist(
-                                        id='x-axishist', 
-                                        options=[{'value': x, 'label': x} 
-                                                for x in ['fixed acidity', 'citric acid', 'chlorides', 'density']],
-                                        value=['citric acid'], 
-                                        labelStyle={'display': 'inline-block'}
-                                    ),
-                                    dcc.Graph(id="hist-plot")],
-                                     style={'width': '48%', 'align': 'right', 'display': 'inline-block'}),
-                                    
-                                            
-                                       
-                                
+                                    dcc.Graph(id="box-plot1"),
+                                    # style={'width': '48%', 'align': 'left', 'display': 'inline-block'}
+                         ] ),
+                        
+                        dbc.Col([
+                            html.P("Histogram"),
+                            dcc.Dropdown(
+                                id = "cont-variable",
+                                options=[{'label': i, 'value': i} for i in X.columns],
+                                placeholder ="Select a variable: "
+                            ),
+                            dcc.Graph(id="hist-plot"),
                         ]),
-    
-    dcc.Graph(id="scatter-plot1"),
-    html.P("quality"),
-    dcc.RangeSlider(
-        id='range-slider',
-        min=3, max=9, step=1,
-        marks={3: '3', 4: '4', 5: '5', 6: '6', 7:'7', 8:'8', 9: '9'},
-        value=[3, 9]
-    ),
-    dcc.Markdown(markdown_hists),
-    fig_dropdown,
-    fig_plot,
-    html.P("Train Model:"),
-    dcc.Dropdown(
-        id='model-name',
-        options=[{'label': x, 'value': x} 
-                 for x in MODELS],
-        value='Logistic',
-        clearable=False
-    ),
-    dcc.Graph(id="graph1")
-])
+                    ]),
 
+                    dbc.Row([
+                        dcc.Graph(id="scatter-plot1"),
+                        html.H3("quality"),
+                        dcc.RangeSlider(
+                            id='range-slider',
+                            min=3, max=9, step=1,
+                            marks={3: '3', 4: '4', 5: '5', 6: '6', 7:'7', 8:'8', 9: '9'},
+                            value=[3, 9]
+                        ),
+                    ]),
+                ]),
+            ]),
+            dcc.Tab(label = "Wine intercative plots", children = [ 
+
+                dbc.Container([
+                    dbc.Row([
+                        html.H1("Train Model:"),
+                        dcc.Dropdown(
+                            id='model-name',
+                            options=[{'label': x, 'value': x} 
+                                    for x in MODELS],
+                            value='Logistic',
+                            clearable=False
+                        ),
+                        dcc.Graph(id="graph1"),
+
+                    ]),
+                ]),
+            ]),
+        ]),
+]),
+            
+    
+                            
+
+    
 operators = [['ge ', '>='],
              ['le ', '<='],
              ['lt ', '<'],
@@ -262,21 +265,6 @@ def update_bar_chart(slider_range):
     return fig
 
 
-
-@app.callback(
-dash.dependencies.Output('fig_plot', 'children'),
-[dash.dependencies.Input('fig_dropdown', 'value')])
-def update_output(fig_name):
-    return name_to_figure(fig_name)
-
-def name_to_figure(fig_name):
-    figure = go.Figure()
-    if fig_name == 'citric acid':
-        figure.add_trace(go.Histogram(x=df['citric acid']))
-    elif fig_name == 'alcohol': 
-        figure.add_trace(go.Histogram(x=df['alcohol']))
-    return dcc.Graph(figure=figure)
-
 @app.callback(
     Output("graph1", "figure"), 
     [Input('model-name', "value")])
@@ -310,10 +298,10 @@ def generate_chart(x, y):
     return fig
 
 @app.callback(
-    Output("hist-plot", "figure"), 
-    [Input("x-axishist", "value")])
-def generate_chart(x):
-    fig = px.histogram(df, x=x)
+    Output('hist', 'figure'),
+    Input('cont-variable', 'value'))
+def update_hist(selected_var):
+    fig = px.histogram(df, x=selected_var)
     return fig
 
 
