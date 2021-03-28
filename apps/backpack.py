@@ -48,7 +48,7 @@ layout = html.Div([
                 dbc.Row([
                    html.Div([
                                     html.Br([]),
-                                    html.H3(
+                                    html.H6(
                                         "\
                                     In this page we can find an analysis of the Backpack dataset, based on the previous \
                                     analysis made in the Shiny App of Leyre Sastre.",
@@ -58,9 +58,10 @@ layout = html.Div([
                                 ],),
 
                ]),
-               dbc.Row([html.H6(
+               dbc.Row([html.H3(
                    ["Data Table"], className= "subtitle padded"
                 ),
+                html.Br([]),
                 html.Br([]),
                 dash_table.DataTable(
                     id='table-sorting-filtering',
