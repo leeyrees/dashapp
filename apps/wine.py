@@ -83,7 +83,7 @@ layout = html.Div([
                                     ),
                                     html.Br([]),
                                     dash_table.DataTable(
-                                    id='table-sorting-filtering',
+                                    id='table-sorting-filtering1',
                                      columns=[
                                     {'name': 'type', 'id': 'type', 'type': 'text'},
                                     {'name': 'fixed acidity', 'id': 'fixed acidity', 'type': 'numeric'},
@@ -138,7 +138,7 @@ layout = html.Div([
                                         value='citric acid', 
                                         labelStyle={'display': 'inline-block'}
                                     ),
-                                    dcc.Graph(id="box-plot")],
+                                    dcc.Graph(id="box-plot1")],
                                      style={'width': '48%', 'align': 'left', 'display': 'inline-block'}
                                 ),
                             html.Div([
@@ -158,7 +158,7 @@ layout = html.Div([
                                 
                         ]),
     
-    dcc.Graph(id="scatter-plot"),
+    dcc.Graph(id="scatter-plot1"),
     html.P("quality"),
     dcc.RangeSlider(
         id='range-slider',
@@ -177,7 +177,7 @@ layout = html.Div([
         value='Logistic',
         clearable=False
     ),
-    dcc.Graph(id="graph")
+    dcc.Graph(id="graph1")
 ])
 
 operators = [['ge ', '>='],
@@ -214,11 +214,11 @@ def split_filter_part(filter_part):
 
 
 @app.callback(
-    Output('table-sorting-filtering', 'data'),
-    Input('table-sorting-filtering', "page_current"),
-    Input('table-sorting-filtering', "page_size"),
-    Input('table-sorting-filtering', 'sort_by'),
-    Input('table-sorting-filtering', 'filter_query'))
+    Output('table-sorting-filtering1', 'data'),
+    Input('table-sorting-filtering1', "page_current"),
+    Input('table-sorting-filtering1', "page_size"),
+    Input('table-sorting-filtering1', 'sort_by'),
+    Input('table-sorting-filtering1', 'filter_query'))
 def update_table(page_current, page_size, sort_by, filter):
     filtering_expressions = filter.split(' && ')
     dff = df
@@ -250,7 +250,7 @@ def update_table(page_current, page_size, sort_by, filter):
     return dff.iloc[page * size: (page + 1) * size].to_dict('records')
 
 @app.callback(
-    Output("scatter-plot", "figure"), 
+    Output("scatter-plot1", "figure"), 
     [Input("range-slider", "value")])
 def update_bar_chart(slider_range):
     low, high = slider_range
@@ -278,7 +278,7 @@ def name_to_figure(fig_name):
     return dcc.Graph(figure=figure)
 
 @app.callback(
-    Output("graph", "figure"), 
+    Output("graph1", "figure"), 
     [Input('model-name', "value")])
 def train_and_display(name):
     model = MODELS[name]()
@@ -302,7 +302,7 @@ def train_and_display(name):
     return fig
 
 @app.callback(
-    Output("box-plot", "figure"), 
+    Output("box-plot1", "figure"), 
     [Input("x-axis", "value"), 
      Input("y-axis", "value")])
 def generate_chart(x, y):

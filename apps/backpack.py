@@ -1,6 +1,6 @@
 import dash
 from dash.dependencies import Input, Output, State
-
+from app import app
 import dash_html_components as html
 import dash_core_components as dcc
 import plotly.express as px
@@ -212,3 +212,4 @@ def train_and_display(name):
 
 if __name__ == '__main__':
     app.run_server(host='127.0.0.1', debug=True)
+
