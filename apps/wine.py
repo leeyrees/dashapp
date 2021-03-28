@@ -68,7 +68,7 @@ layout = html.Div([
                                     html.H3(
                                         "\
                                     In this page we are going to carry out an analysis of the wine dataset \
-                                    from the Shiny App of Marta Ilundain (github: ENLACE).",
+                                    from the Shiny App of Marta Ilundain.",
                                         
                                         className="row",
                                     ),
@@ -116,10 +116,14 @@ layout = html.Div([
                                         sort_mode='multi',
                                         sort_by=[],
                                     style_header={'backgroundColor': 'rgb(30, 30, 30)'},
+                                    style_table={'overflowX': 'auto'},
                                     style_cell={
-                                        'backgroundColor': 'rgb(50, 50, 50)',
-                                        'color': 'white'
-                                    },
+                                        'backgroundColor': 'rgb(188, 179, 177)',
+                                        'color': 'white',
+                                        
+                                        }
+                                    ,
+                                    
                                     ),
 
                 ]),

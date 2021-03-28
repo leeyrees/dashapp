@@ -90,7 +90,7 @@ layout = html.Div([
                         sort_by=[],
                         style_header={'backgroundColor': 'rgb(30, 30, 30)'},
                         style_cell={
-                                    'backgroundColor': 'rgb(50, 50, 50)',
+                                    'backgroundColor': 'rgb(188, 179, 177)',
                                     'color': 'white'
                         },
                 ),
