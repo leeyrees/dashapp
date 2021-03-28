@@ -59,16 +59,16 @@ sidebar = html.Div(
     style=SIDEBAR_STYLE,
 )
 
-content = html.Div(id="page-content1", style=CONTENT_STYLE)
+content = html.Div(id="page-content", style=CONTENT_STYLE)
 
 layout = html.Div([dcc.Location(id="url"), sidebar, content])
 
 @app.callback(
-    Output('table-sorting-filtering1', 'data'),
-    Input('table-sorting-filtering1', "page_current"),
-    Input('table-sorting-filtering1', "page_size"),
-    Input('table-sorting-filtering1', 'sort_by'),
-    Input('table-sorting-filtering1', 'filter_query'))
+    Output('table-sorting-filtering', 'data'),
+    Input('table-sorting-filtering', "page_current"),
+    Input('table-sorting-filtering', "page_size"),
+    Input('table-sorting-filtering', 'sort_by'),
+    Input('table-sorting-filtering', 'filter_query'))
 def update_table(page_current, page_size, sort_by, filter):
     filtering_expressions = filter.split(' && ')
     dff = df
@@ -101,7 +101,7 @@ def update_table(page_current, page_size, sort_by, filter):
 
 
 
-@app.callback(Output("page-content1", "children"), [Input("url", "pathname")])
+@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
         return [
@@ -110,7 +110,7 @@ def render_page_content(pathname):
                                     ),
                                     html.Br([]),
                                     dash_table.DataTable(
-                                    id='table-sorting-filtering1',
+                                    id='table-sorting-filtering',
                                      columns=[
                                     {'name': 'type', 'id': 'type', 'type': 'text'},
                                     {'name': 'fixed acidity', 'id': 'fixed acidity', 'type': 'numeric'},

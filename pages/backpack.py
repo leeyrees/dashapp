@@ -9,8 +9,9 @@ import dash_table
 import plotly.graph_objects as go
 from sklearn.model_selection import train_test_split
 from sklearn import linear_model, tree, neighbors
-from app import app
 
+
+app = dash.Dash(__name__, title="Dash App")
 
 import numpy as np
 import pandas as pd
@@ -36,7 +37,7 @@ models = {'Regression': linear_model.LogisticRegression,
 
 
 PAGE_SIZE = 5
-layout = html.Div([
+app.layout = html.Div([
     dash_table.DataTable(
     id='table-sorting-filtering',
     columns=[
@@ -94,8 +95,7 @@ layout = html.Div([
         value='Regression',
         clearable=False
     ),
-    dcc.Graph(id="graph"),
-    dcc.Link('Go to App 2', href='/pages/wine2'),
+    dcc.Graph(id="graph")
 ])
 
 operators = [['ge ', '>='],
@@ -209,3 +209,6 @@ def train_and_display(name):
     ])
 
     return fig
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
