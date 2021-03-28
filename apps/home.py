@@ -24,28 +24,35 @@ layout = html.Div([
         html.Br([]),
         dbc.Row([
             dbc.Col(dbc.Button("Wine dataset", href="https://www.kaggle.com/rajyellow46/wine-quality",
-                                                                   color="primary"),
-                                                        className="mt-3") 
+                                                                   color="primary", className = "text-center"),
+                                                        className="mt-3", style={'textAlign':'center'}) 
             
         ]),
+        html.Br([]),
         dbc.Row([
             dbc.Col(html.H5(children='The app has a section for each dataset. In these sections, we can visualize the data through tables and graphs. Another feature of this app  '
                                      'is the possibility of analysing the results of predicting the data by using different ML methods and training and testing.')
                     , className="mb-5")
         ]),
+        dbc.Row([
+            dbc.Col(html.H3("References", className="text-left")
+                    )
+        ]),
 
         dbc.Row([
-            dbc.Col(dbc.Card(children=[html.H3(children='References',
-                                               className="text-center"),
-                                       dbc.Row([dbc.Col(dbc.Button("Dash Plotly", href="https://dash.plotly.com/",
-                                                                   color="primary"),
+            dbc.Col(
+                         dbc.Row([dbc.Col(dbc.Button("Dash Plotly", href="https://dash.plotly.com/",
+                                                                   color="primary", style={'textAlign':'center'}),
                                                         className="mt-3"),
                                                 dbc.Col(dbc.Button("Covid Dash App", href="https://github.com/meredithwan/covid-dash-app/blob/master/apps/home.py",
-                                                                   color="primary"),
-                                                        className="mt-3")], justify="center")
-                                       ],
-                             body=True, color="dark", outline=True)
-                    , width=4, className="mb-5"),
+                                                                   color="primary", style={'textAlign':'center'}),
+                                                        className="mt-3"),
+                                                dbc.Col(dbc.Button("Dash Bootstrap Components", href = "https://dash-bootstrap-components.opensource.faculty.ai/",
+                                                color = "primary", style = {'textAlign':'center'}),className="mt-3")], justify="center"))
+                                       
+                             
+                    
+                    
 
     ]),
 
