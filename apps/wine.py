@@ -147,6 +147,19 @@ layout = html.Div([
                                 figure={}
                             ),
                         ]),
+                        dbc.Row([dbc.Col([
+                            html.H3("Pie Chart"),
+                            html.P("Type: White or Red"),
+                            html.P("Values:"),
+                            dcc.Dropdown(
+                                id='values', 
+                                value='Alcohol', 
+                                options=[{'value': x, 'label': x} 
+                                for x in ['fixed acidity', 'citric acid', 'chlorides', 'density']],
+                                clearable=False
+                            ),
+                            dcc.Graph(id="pie-chart"),
+                        ])])
                     ]),
 
                     dbc.Row([
@@ -332,6 +345,13 @@ def update_chart(clicks, x):
         return px.histogram(df,x=x)
     else:
         return px.histogram()
+@app.callback(
+    Output("pie-chart", "figure"),  
+     Input("values", "value"))
+def generate_chart(names, values):
+    fig = px.pie(df, values=values, names="type")
+    return fig
+
 
 #@app.callback(
 #    Output('hist', 'figure'),
