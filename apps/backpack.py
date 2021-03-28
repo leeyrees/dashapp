@@ -40,16 +40,17 @@ PAGE_SIZE = 5
 layout = html.Div([
     dcc.Tabs([
         dcc.Tab(label = "Data table", children = [
+
             dbc.Container([
-                dbc.Row([
-                    dbc.Col(html.H1("BACKPACK DATASET", className="text-center")
+               dbc.Row([
+                   dbc.Col(html.H1("BACKPACK DATASET", className="text-center")
                     , className="mb-5 mt-5"),
-                ]),
-                dbc.Row([
+               ]),
+               dbc.Row([
                    html.Div([
                                     html.Br([]),
-                                    html.H6(
-                                        "\
+                                    html.H3(
+                                       "\
                                     In this page we can find an analysis of the Backpack dataset, based on the previous \
                                     analysis made in the Shiny App of Leyre Sastre.",
                                         
@@ -58,11 +59,12 @@ layout = html.Div([
                                 ],),
 
                ]),
-               dbc.Row([html.H3(
-                   ["Data Table"], className= "subtitle padded"
-                ),
+                dbc.Row([ html.H6(
+                                        ["Data table"], className="text-center",
+                                        
+                                    ),
                 html.Br([]),
-                html.Br([]),
+                html.H6("We can see in this table the data and we can filter it as we want"),
                 dash_table.DataTable(
                     id='table-sorting-filtering',
                         columns=[
