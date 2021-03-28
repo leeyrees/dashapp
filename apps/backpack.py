@@ -66,6 +66,19 @@ layout = html.Div([
             ),
         ]),
         dcc.Tab(label = "Plots", children = [
+            html.P("Scatter Plot"),
+            dcc.Dropdown(
+                id = "cont-variable-1",
+                options=[{'label': i, 'value': i} for i in ['BackpackWeight', 'BodyWeight','Year','Units']],
+                placeholder ="Select the first variable: ", 
+                value = "BackpackWeight"
+            ),
+            dcc.Dropdown(
+                id = "cont-variable-2",
+                options = [{'label': i, 'value': i} for i in ['BackpackWeight', 'BodyWeight','Year','Units']],
+                placeholder ="Select the second variable: ", 
+                value = "BodyWeight"
+            ),
             dcc.Graph(id="scatter-plot"),
                 html.P("Year"),
                 dcc.RangeSlider(
@@ -177,12 +190,14 @@ def update_table(page_current, page_size, sort_by, filter):
 
 @app.callback(
     Output("scatter-plot", "figure"), 
-    [Input("range-slider", "value")])
-def update_bar_chart(slider_range):
+    [Input("range-slider", "value"),
+    Input('cont-variable-1', 'value'),
+    Input('cont-variable-2', 'value')])
+def update_bar_chart(slider_range, selected_var_1, selected_var_2):
     low, high = slider_range
     mask = (df['Year'] > low) & (df['Year'] < high)
     fig = px.scatter(
-        df[mask], x="BodyWeight", y="BackpackWeight", 
+        df[mask], x=selected_var_1, y=selected_var_2, 
         color="BackProblems", size='Ratio', 
         hover_data=['Year'])
     return fig
