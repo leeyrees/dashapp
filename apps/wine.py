@@ -24,13 +24,7 @@ import sklearn.metrics as metrics
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.csv'
 df = pd.read_csv(df_url).dropna()
 df['type'] = df['type'].astype('category')
-markdown_hists = '''
 
-
-## Histograms of the data
-
-###### Select the variable to plot the histogram
-'''
 
 PAGE_SIZE = 5
 
@@ -117,23 +111,22 @@ layout = html.Div([
                     dbc.Row([
                         dbc.Col([
                             html.P("x-axis:"),
-                                    dcc.Checklist(
-                                        id='x-axis', 
-                                        options=[{'value': x, 'label': x} 
-                                                for x in ['fixed acidity', 'citric acid', 'chlorides', 'density']],
-                                        value=['citric acid'], 
-                                        labelStyle={'display': 'inline-block'}
-                                    ),
-                                    html.P("y-axis:"),
-                                    dcc.RadioItems(
-                                        id='y-axis', 
-                                        options=[{'value': x, 'label': x} 
-                                                for x in ['fixed acidity', 'citric acid', 'density','pH','alcohol']],
-                                        value='citric acid', 
-                                        labelStyle={'display': 'inline-block'},
-                                    ),
-                                    dcc.Graph(id="box-plot1"),
-                                    # style={'width': '48%', 'align': 'left', 'display': 'inline-block'}
+                            dcc.Checklist(
+                                id='x-axis', 
+                                options=[{'value': x, 'label': x} 
+                                        for x in ['type']],
+                                value=['type'], 
+                                labelStyle={'display': 'inline-block'}
+                            ),
+                            html.P("y-axis:"),
+                            dcc.RadioItems(
+                                id='y-axis', 
+                                options=[{'value': x, 'label': x} 
+                                        for x in ['fixed acidity', 'citric acid', 'chlorides', 'density']],
+                                value='fixed acidity', 
+                                labelStyle={'display': 'inline-block'}
+                            ),
+                            dcc.Graph(id="box-plot1"),
                          ] ),
                         
                         dbc.Col([
@@ -143,7 +136,7 @@ layout = html.Div([
                                 options=[{'label': i, 'value': i} for i in X.columns],
                                 placeholder ="Select a variable: "
                             ),
-                            dcc.Graph(id="hist-plot"),
+                            dcc.Graph(id="hist"),
                         ]),
                     ]),
 
@@ -300,8 +293,8 @@ def generate_chart(x, y):
 @app.callback(
     Output('hist', 'figure'),
     Input('cont-variable', 'value'))
-def update_hist(selected_var):
-    fig = px.histogram(df, x=selected_var)
+def update_hist(x):
+    fig = px.histogram(df, x=x)
     return fig
 
 
