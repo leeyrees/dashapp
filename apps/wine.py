@@ -9,8 +9,6 @@ import dash_table
 import plotly.graph_objects as go
 
 
-app = dash.Dash(__name__, title="Dash App Wine Dataset",external_stylesheets=[dbc.themes.LUX])
-
 import numpy as np
 import pandas as pd
 import json
@@ -27,7 +25,10 @@ df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.
 df = pd.read_csv(df_url).dropna()
 df['type'] = df['type'].astype('category')
 markdown_hists = '''
+
+
 ## Histograms of the data
+
 ###### Select the variable to plot the histogram
 '''
 
@@ -67,7 +68,7 @@ layout = html.Div([
                                         "\
                                     In this page we are going to carry out an analysis of the wine dataset \
                                     from the Shiny App of Marta Ilundain (github: ENLACE).",
-
+                                        
                                         className="row",
                                     ),
                                 ],
@@ -109,12 +110,12 @@ layout = html.Div([
                                         sort_mode='multi',
                                         sort_by=[]
                                     ),
-
+                                    
                                 ],
-
+                                
                             )
                         ],
-
+                        
                     ),
             # Row 3
                     html.Div(
@@ -151,12 +152,12 @@ layout = html.Div([
                                     ),
                                     dcc.Graph(id="hist-plot")],
                                      style={'width': '48%', 'align': 'right', 'display': 'inline-block'}),
-
-
-
-
+                                    
+                                            
+                                       
+                                
                         ]),
-
+    
     dcc.Graph(id="scatter-plot"),
     html.P("quality"),
     dcc.RangeSlider(
@@ -206,7 +207,7 @@ def split_filter_part(filter_part):
                     except ValueError:
                         value = value_part
 
-
+                
                 return name, operator_type[0].strip(), value
 
     return [None] * 3
@@ -317,4 +318,4 @@ def generate_chart(x):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='127.0.0.1', debug=True)

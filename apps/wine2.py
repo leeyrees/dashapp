@@ -1,4 +1,4 @@
-mport dash
+import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
@@ -179,7 +179,8 @@ def split_filter_part(filter_part):
                     except ValueError:
                         value = value_part
 
-
+                
                 return name, operator_type[0].strip(), value
 
     return [None] * 3
+

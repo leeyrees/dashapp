@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import linear_model, tree, neighbors
 
 
-app = dash.Dash(__name__, title="Dash App")
+#app = dash.Dash(__name__, title="Dash App")
 
 import numpy as np
 import pandas as pd
@@ -37,7 +37,7 @@ models = {'Regression': linear_model.LogisticRegression,
 
 
 PAGE_SIZE = 5
-app.layout = html.Div([
+layout = html.Div([
     dash_table.DataTable(
     id='table-sorting-filtering',
     columns=[
@@ -125,7 +125,7 @@ def split_filter_part(filter_part):
                     except ValueError:
                         value = value_part
 
-
+                
                 return name, operator_type[0].strip(), value
 
     return [None] * 3
@@ -211,4 +211,4 @@ def train_and_display(name):
     return fig
 
 if __name__ == '__main__':
-    app.run_server(debug=True) 
+    app.run_server(host='127.0.0.1', debug=True)
