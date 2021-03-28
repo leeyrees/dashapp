@@ -22,8 +22,17 @@ import sklearn.metrics as metrics
 
 
 df_url = 'https://raw.githubusercontent.com/leeyrees/datasets/main/winequalityN.csv'
+
 df = pd.read_csv(df_url).dropna()
+
 df['type'] = df['type'].astype('category')
+
+# THIS COMMENTS LINE DIDN'T WORK WHEN PLOTTING MY GRAPH
+#df_important = df[["name", "type","free sulfur dioxide","total sulfur dioxide","alcohol","quality"]]
+#df_important["name"] = df_important.index + 1
+#df_important_type = df_important['type'].dropna().sort_values().unique()
+
+#opt_type = [{'label': x + 'type', 'value': x} for x in df_important_type]
 
 
 PAGE_SIZE = 5
@@ -41,8 +50,6 @@ MODELS = {'Logistic': linear_model.LogisticRegression,
           'k-NN': neighbors.KNeighborsClassifier}
 
 
-
-
 layout = html.Div([
 
         dcc.Tabs([
@@ -55,6 +62,7 @@ layout = html.Div([
                     , className="mb-5 mt-5"),
                ]),
                dbc.Row([
+                   html.Br([]),
                    html.Div([
                                     html.Br([]),
                                     html.H3(
@@ -67,7 +75,9 @@ layout = html.Div([
                                 ],),
 
                ]),
-                dbc.Row([ html.H6(
+                dbc.Row([ 
+                    html.Br([]),
+                    html.H6(
                                         ["Data table"], className="subtitle padded"
                                     ),
                                     html.Br([]),
@@ -106,14 +116,68 @@ layout = html.Div([
                                     ),
 
                 ]),
+             #    dbc.Row([
+             #    html.Br([]),
+             #         dbc.Col([
+             #           html.Div(id='my-div', style={'display': 'none'}),
+             #            dcc.Graph(id='my-graph'),
+             #           dcc.Graph(id='my-box-plot'),
+            
+             # generate_table(df_important)
+            
+             # html.Div([
+             #     html.Label('Dropdown'),
+             #     dcc.Dropdown(
+             #           id='my-dropdown',
+             #             options=opt_type,
+             #             value=df_important_type[0]
+             #     ),
+                
+             #   html.Label('Multi-Select Dropdown'),
+             #    dcc.Dropdown(
+             #         id='my-multi-dropdown',
+             #         options=opt_type,
+             #         value=df_important_type[0],
+             #         multi=True
+             #     ),
+            
+            
+             #    html.Label('Text Input'),
+             #    dcc.Input(value='MTL', type='text'),
+            
+             #   html.Label('Slider'),
+             #     html.Div(
+             #       dcc.RangeSlider(
+             #            id='my-slider',
+             #             step=0.1,
+             #          min=min(df_important['quality']),
+             #           max=max(df_important['quality'])
+             #       ),
+             #        style={
+             #          'margin': '10%'
+             #        }
+             #    ),
+             #    html.Button('Update filter', id='my-button')
+
+             # ], style={'columnCount': 2}),
+
+             # dash_table.DataTable(
+             #       id='my-table',
+             #     columns=[{"name": i, "id": i} for i in df_important.columns]
+             #   )
+             #   ])
+            #])
+
+
            ])]),
 
-            # Row 3
+            # Row 
             dcc.Tab(label = "Wine data plots", children = [ 
 
                 dbc.Container([
 
                     dbc.Row([
+                        html.Br([]),
                         dbc.Col([
                             html.H3("Boxplot:"), 
                             html.H3("y-axis:"),
@@ -150,6 +214,7 @@ layout = html.Div([
                     ]),
 
                     dbc.Row([
+                        html.Br([]),
                         dbc.Col([ 
                         html.H3("Scatter Plot"),
 
@@ -181,12 +246,14 @@ layout = html.Div([
                     ]),
                 ]),
             ]),
-            dcc.Tab(label = "Wine intercative plots", children = [ 
+            dcc.Tab(label = "Machine Learning", children = [ 
 
                 dbc.Container([
                     dbc.Row([
+                        html.Br([]),
                         dbc.Col([
                         html.H1("Train Model:"),
+                        html.Br([]),
                         dcc.Dropdown(
                             id='model-name',
                             options=[{'label': x, 'value': x} 
@@ -195,6 +262,12 @@ layout = html.Div([
                             clearable=False
                         ),
                         dcc.Graph(id="graph1"),
+                        
+                        ]),
+                        dbc.Col([
+                            html.Br([]),
+                            html.Br([]),
+                            dcc.Graph(id="confusion")
                         ])
 
                     ]),
@@ -238,6 +311,59 @@ def split_filter_part(filter_part):
                 return name, operator_type[0].strip(), value
 
     return [None] * 3
+
+# @app.callback(
+#   Output('my-div', 'children'),
+#    [Input('my-button', 'n_clicks')],
+#    [State('my-slider', 'value')])
+#def update_data(n_clicks, slider_range):
+#    if (slider_range and len(slider_range) == 2):
+#        l, h = slider_range
+#    else :
+#        l, h = min(df_important['quality']), max(df_important['quality'])
+#    db = df_important[df_important['quality'].between(l,h)].to_json(orient='split', date_format='iso')
+#    return json.dumps(db)
+#
+#@app.callback(
+#    [Output('my-graph', 'figure')],
+#    [Input('my-div', 'children'),
+#     Input('my-multi-dropdown', 'value')]
+#)
+#def update_output_graph(data, input_value):
+#    if data is None:
+#        return {}, {}
+#    dataset = json.loads(data)
+#    db = pd.read_json(dataset, orient='split')
+#    return  {
+#                'data': [
+#                    go.Scatter(
+#                        x=db[db['type'] == i]['total sulfur dioxide'] if i in input_value else [],
+#                        y=db[db['type'] == i]['alcohol'] if i in input_value else [],
+#                        text=db[db['type'] == i]['name'],
+#                        mode='markers',
+#                        opacity=0.7,
+#                        marker={
+#                            'size': 15,
+#                            'line': {'width': 0.5, 'color': 'white'}
+#                        },
+#                        name=i
+#                    ) for i in df_important_type
+#                ],
+#                'layout': go.Layout(
+#                    xaxis={'type': 'log', 'title': 'Body weight (kg)'},
+#                   yaxis={'title': 'Total daily sleep time (hr)'},
+#                    margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+#                    legend={'x': 0, 'y': 1},
+#                    hovermode='closest',
+#                    dragmode='lasso'
+#                )
+#            },  {
+#                'data': [ go.Box(
+#                            y= db[db['type'] == i]['quality'],
+#                            name= i + 'type'
+#                        ) if i in input_value else {}
+#                          for i in df_important_type ]
+#            }
 
 
 @app.callback(
@@ -315,6 +441,34 @@ def train_and_display(name):
 
     return fig
 
+
+@app.callback(
+    Output("confusion", "figure"), 
+    [Input('model-name', "value")])
+def confusion_matrix(name):
+    model = MODELS[name]()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    #y_score = model.predict_proba(X_test)[:, 1]
+
+    confusion_matrix = metrics.confusion_matrix(y_test, y_pred)
+    confusion_matrix = confusion_matrix.astype(int)
+
+    layout = {
+        "title": "Confusion Matrix", 
+        "xaxis": {"title": "Predicted value"}, 
+        "yaxis": {"title": "Real value"}
+    }
+
+
+    fig = go.Figure(data=go.Heatmap(z=confusion_matrix,
+                                    x=['white', 'red'],
+                                    y=['white', 'red'],
+                                    hoverongaps=False),
+                    layout=layout)
+    return fig
+
 @app.callback(
     Output("box-plot1", "figure"), 
     [Input("y-axis", "value")])
@@ -333,12 +487,43 @@ def update_chart(clicks, x):
     else:
         return px.histogram()
 
+
 #@app.callback(
-#    Output('hist', 'figure'),
- #   Input('cont-variable', 'value'))
-#def update_hist(x):
- #   fig = px.histogram(df, x=x)
-  #  return fig
+#    [Output('my-slider', 'min'), 
+#     Output('my-slider', 'max'), 
+#     Output('my-slider', 'value'), 
+#     Output('my-slider', 'marks')],
+#    [Input('my-multi-dropdown', 'value')]
+#)
+#def update_slider(input_value):
+#    def round(x):
+#        return int(x) if x % 0.1 < 0.1 else x
+#
+#    s = pd.Series(input_value, name='type')
+#    data = df_important[df_important.type.isin(s)]['quality'] 
+#
+#    min = round(data.min())
+#    max = round(data.max())
+#    mean = round(data.mean())
+#    low = round((min + mean)/2)
+#    high = round((max + mean) / 2)
+#    marks = {min: {'label': str(min), 'style': {'color': '#77b0b1'}},
+#             max: {'label': str(max), 'style': {'color': '#77b0b1'}}}
+#    return min, max,  low, high, marks 
+
+#@app.callback(
+#    Output('my-table', 'data'),
+#    [Input('my-graph', 'selectedData')])
+#def display_selected_data(selected_data):
+#    if selected_data is None or len(selected_data) == 0:
+#        return None
+
+#    points = selected_data['points']
+#    if len(points) == 0:
+#        return None
+
+#   names = [x['text'] for x in points]
+#    return df_important[df_important['name'].isin(names)].to_dict("rows")
 
 
 if __name__ == '__main__':

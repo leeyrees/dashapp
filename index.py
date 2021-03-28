@@ -18,16 +18,7 @@ nav_item = dbc.NavItem([
     ])
 ])
 
-dropdown = dbc.DropdownMenu(
-    children=[
-        dbc.DropdownMenuItem("Home", href="/haha"),
-        dbc.DropdownMenuItem("backpack", href="/backpack"),
-        dbc.DropdownMenuItem("wine", href="/wine"),
-    ],
-    nav = True,
-    in_navbar = True,
-    label = "Explore",
-)
+
 
 navbar = dbc.Navbar(
     dbc.Container(
@@ -49,7 +40,7 @@ navbar = dbc.Navbar(
             dbc.Collapse(
                 dbc.Nav(
                     # right align dropdown menu with ml-auto className
-                    [nav_item, dropdown], className="ml-auto", navbar=True
+                    [nav_item], className="ml-auto", navbar=True
                 ),
                 id="navbar-collapse2",
                 navbar=True,
