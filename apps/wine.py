@@ -141,6 +141,24 @@ layout = html.Div([
 
                     dbc.Row([
                         dbc.Col([ 
+                        html.H3("Scatter Plot"),
+
+                        html.P("Select the first variable"),
+                        html.Br([]),
+                        dcc.Dropdown(
+                            id = "cont-variable-1",
+                            options=[{'label': i, 'value': i} for i in X.columns],
+                            placeholder ="Select the first variable: ", 
+                            value = "fixed acidity"
+                        ),
+                        html.Br([]),
+                        html.P("Select the Second variable"),
+                        dcc.Dropdown(
+                            id = "cont-variable-2",
+                            options = [{'label': i, 'value': i} for i in X.columns ],
+                            placeholder ="Select the second variable: ", 
+                            value = "citric acid"
+                        ),
                         dcc.Graph(id="scatter-plot1"),
                         html.H3("quality"),
                         dcc.RangeSlider(
@@ -250,12 +268,14 @@ def update_table(page_current, page_size, sort_by, filter):
 
 @app.callback(
     Output("scatter-plot1", "figure"), 
-    [Input("range-slider", "value")])
-def update_bar_chart(slider_range):
+    [Input("range-slider", "value"),
+    Input('cont-variable-1', 'value'),
+    Input('cont-variable-2', 'value')])
+def update_bar_chart(slider_range, selected_var_1, selected_var_2):
     low, high = slider_range
     mask = (df['quality'] > low) & (df['quality'] < high)
     fig = px.scatter(
-        df[mask], x="total sulfur dioxide", y="alcohol", 
+        df[mask], x=selected_var_1, y=selected_var_2,  
         color="type", 
         hover_data=['quality'])
     return fig
